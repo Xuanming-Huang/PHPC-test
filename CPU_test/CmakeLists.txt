@@ -1,0 +1,27 @@
+cmake_minimum_required(VERSION 3.16)
+
+project(CPU_TIME_COST LANGUAGES CXX)
+
+include(${CMAKE_CURRENT_LIST_DIR}/../lib_comp_config.cmake)
+
+add_library(cpu_lib STATIC
+    ../src/kernels_cpu.cpp
+    ../src/time_cost.cpp
+)
+
+target_include_directories(cpu_lib PUBLIC ../include)
+
+target_compile_options(cpu_lib PRIVATE
+    -O3
+    -march=native
+    -mtune=native
+    -ffast-math
+    -Wall -Wextra -Wpedantic
+)
+
+add_executable(test test_main.cpp)
+
+target_link_libraries(test PRIVATE cpu_lib)
+
+# OpenMP
+target_link_libraries(test PRIVATE OpenMP::OpenMP_CXX)
